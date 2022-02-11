@@ -119,21 +119,35 @@ def depthFirstSearch(problem):
         children = problem.getSuccessors(position)
         for child in children:
             stack.append((child, path + [direction], visited))
-    shortestSol = min(sols, key=len)
-    # print(shortestSol)
-    # print(len(sols))
-    return shortestSol
-
-    print(type(problem))
-    print("Start:", problem.getStartState())
-    print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
-    print("Start's successors:", problem.getSuccessors(problem.getStartState()))
-    util.raiseNotDefined()
+    return sols[0]
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+        # visited = set()
+    stack = []
+    #the state, the path, and the current visited list
+    stack.append(((problem.getStartState(), None, None), [], set()))
+    sols = []
+    while stack:
+        state = stack.pop(0) #last element on stack
+        position = state[0][0]
+        direction = state[0][1]
+        path = state[1]
+        visited = state[2]
+        if position in visited:
+            # print("visited")
+            continue
+        visited.add(position)
+        if problem.isGoalState(position):
+            sol = path + [direction]
+            sol.pop(0)
+            sols.append(sol)
+            return sol
+        children = problem.getSuccessors(position)
+        for child in children:
+            stack.append((child, path + [direction], visited))
+    return sols[0]
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
