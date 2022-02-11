@@ -105,27 +105,28 @@ def depthFirstSearch(problem):
 
     visited = set()
     stack = []
-    stack.append((problem.getStartState(), None, None))
-    path = []
+    stack.append(((problem.getStartState(), None, None), []))
+    sol = []
     while stack:
         state = stack.pop() #last element on stack
-        print(state[0])
-        if state[0] in visited:
+        position = state[0][0]
+        direction = state[0][1]
+        path = state[1]
+        if position in visited:
+            print("visited")
             continue
-        visited.add(state[0])
-        path.append(state)
-        if problem.isGoalState(state[0]):
+        visited.add(position)
+        if problem.isGoalState(position):
+            sol = path + [direction]
             break
-        children = problem.getSuccessors(state[0])
+        children = problem.getSuccessors(position)
         for child in children:
-            if child[0] not in visited:
-                stack.append(child)
-    actions = []
-    for item in path:
-        dir = item[1]
-        if dir != None:
-            actions.append(dir)
-    return actions
+            stack.append((child, path + [direction]))
+    print(sol)
+    sol.pop(0)
+    return sol
+
+
 
     print(type(problem))
     print("Start:", problem.getStartState())
