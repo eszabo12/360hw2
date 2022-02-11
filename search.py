@@ -152,12 +152,12 @@ def uniformCostSearch(problem):
     # visited = set()
     stack = util.PriorityQueue()
     #the state, the path, and the current visited list
-    stack.push(((problem.getStartState(), None, 0), [], 0, set()), 0)
-    sols = []
+    stack.push(((problem.getStartState(), None, 0), [], 0), 0)
+    visited = set()
     while not stack.isEmpty():
         deq = stack.pop()
-        info, path, totalCost, visited = deq[0] #priority queue whatever
-        print("priority: " + str(deq[1]))
+        info, path, totalCost = deq[0] #priority queue whatever
+        # print("priority: " + str(deq[1]))
         position, direction, currentCost = info
         if position in visited:
             # print("visited")
@@ -166,14 +166,12 @@ def uniformCostSearch(problem):
         if problem.isGoalState(position):
             sol = path + [direction]
             sol.pop(0)
-            sols.append(sol)
+            return sol
         children = problem.getSuccessors(position)
         for child in children:
             childCost = child[2]
-            stack.push((child, path + [direction], totalCost + childCost, visited), totalCost + childCost)
+            stack.push((child, path + [direction], totalCost + childCost), totalCost + childCost)
     # return min(sols, key=len)
-    print(len(sols))
-    return sols[0]
 
 
 def nullHeuristic(state, problem=None):
