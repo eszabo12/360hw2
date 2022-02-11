@@ -294,7 +294,8 @@ class CornersProblem(search.SearchProblem):
         # Please add any code here which you would like to use
         # in initializing the problem
         "*** YOUR CODE HERE ***"
-
+        self.startingGameState = startingGameState
+        
     def getStartState(self):
         """
         Returns the start state (in your state space, not the full Pacman state
@@ -380,7 +381,17 @@ def cornersHeuristic(state, problem):
     dist = []
     for i in notvisited:
         dist.append(euclidianDistance(position, i))
-    return min(dist)
+    # mindist = min(dist)
+
+    mazes = []
+    for i in notvisited:
+        # print(i)
+        mazes.append(elleMaze(position, i, problem.startingGameState))
+    return min(mazes)
+    # return min(dist)
+
+
+
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
@@ -454,6 +465,27 @@ def mazeDistance(point1, point2, gameState):
     assert not walls[x1][y1], 'point1 is a wall: ' + str(point1)
     assert not walls[x2][y2], 'point2 is a wall: ' + str(point2)
     prob = PositionSearchProblem(gameState, start=point1, goal=point2, warn=False, visualize=False)
+    return len(search.bfs(prob))
+
+def elleMaze(point1, point2, gameState):
+    """
+    Returns the maze distance between any two points, using the search functions
+    you have already built. The gameState can be any game state -- Pacman's
+    position in that state is ignored.
+
+    Example usage: mazeDistance( (2,4), (5,6), gameState)
+
+    This might be a useful helper function for your ApproximateSearchAgent.
+    """
+    x1, y1 = point1
+    x2, y2 = point2
+    walls = gameState.getWalls()
+    assert not walls[x1][y1], 'point1 is a wall: ' + str(point1)
+    assert not walls[x2][y2], 'point2 is a wall: ' + str(point2)
+        # def __init__(self, gameState, costFn = lambda x: 1, goal=(1,1), start=None, warn=True, visualize=True):
+    costFn = lambda pos: euclidianDistance((1,1), pos)
+
+    prob = PositionSearchProblem(gameState, costFn=costFn, start=point1, goal=point2, warn=False, visualize=False)
     return len(search.bfs(prob))
 
 class AStarSuperFoodAgent(SearchAgent):
