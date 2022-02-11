@@ -124,17 +124,15 @@ def depthFirstSearch(problem):
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-        # visited = set()
+    visited = set()
     stack = []
     #the state, the path, and the current visited list
-    stack.append(((problem.getStartState(), None, None), [], set()))
-    sols = []
+    stack.append(((problem.getStartState(), None, None), []))
     while stack:
         state = stack.pop(0) #last element on stack
         position = state[0][0]
         direction = state[0][1]
         path = state[1]
-        visited = state[2]
         if position in visited:
             # print("visited")
             continue
@@ -142,17 +140,38 @@ def breadthFirstSearch(problem):
         if problem.isGoalState(position):
             sol = path + [direction]
             sol.pop(0)
-            sols.append(sol)
             return sol
         children = problem.getSuccessors(position)
         for child in children:
-            stack.append((child, path + [direction], visited))
-    return sols[0]
+            stack.append((child, path + [direction]))
+    return []
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    visited = set()
+    stack = []
+    #the state, the path, and the current visited list
+    stack.append(((problem.getStartState(), None, None), [], 0))
+    while stack:
+        state = stack.pop(0) #last element on stack
+        position = state[0][0]
+        direction = state[0][1]
+        currentCost = state[0][2]
+        path = state[1]
+        cost = state[2]
+        if position in visited:
+            # print("visited")
+            continue
+        visited.add(position)
+        if problem.isGoalState(position):
+            sol = path + [direction]
+            sol.pop(0)
+            return sol
+        children = problem.getSuccessors(position)
+        for child in children:
+            stack.append((child, path + [direction], cost + currentCost))
+    return []
 
 def nullHeuristic(state, problem=None):
     """
