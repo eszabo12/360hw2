@@ -131,6 +131,7 @@ def breadthFirstSearch(problem):
     while stack:
         state = stack.pop(0) #last element on stack
         position = state[0][0]
+        # print(position)
         direction = state[0][1]
         path = state[1]
         if position in visited:
@@ -155,12 +156,9 @@ def uniformCostSearch(problem):
     stack.push(((problem.getStartState(), None, 0), [], 0), 0)
     visited = set()
     while not stack.isEmpty():
-        deq = stack.pop()
-        info, path, totalCost = deq[0] #priority queue whatever
-        # print("priority: " + str(deq[1]))
+        info, path, totalCost = stack.pop()[0] #priority queue whatever
         position, direction, currentCost = info
         if position in visited:
-            # print("visited")
             continue
         visited.add(position)
         if problem.isGoalState(position):
@@ -171,7 +169,6 @@ def uniformCostSearch(problem):
         for child in children:
             childCost = child[2]
             stack.push((child, path + [direction], totalCost + childCost), totalCost + childCost)
-    # return min(sols, key=len)
 
 
 def nullHeuristic(state, problem=None):
@@ -184,7 +181,29 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    """Search the node of least total cost first."""
+    "*** YOUR CODE HERE ***"
+    # visited = set()
+    stack = util.PriorityQueue()
+    #the state, the path, and the current visited list
+    stack.push(((problem.getStartState(), None, 0), [], 0), 0)
+    visited = set()
+    while not stack.isEmpty():
+        info, path, totalCost = stack.pop()[0] #priority queue whatever
+        position, direction, currentCost = info
+        if position in visited:
+            continue
+        visited.add(position)
+        if problem.isGoalState(position):
+            sol = path + [direction]
+            sol.pop(0)
+            return sol
+        children = problem.getSuccessors(position)
+        for child in children:
+            childCost = child[2]
+            childPos = child[0]
+            heur = heuristic(childPos, problem)
+            stack.push((child, path + [direction], totalCost + childCost), totalCost + childCost + heur)
 
 
 # Abbreviations
