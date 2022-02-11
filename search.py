@@ -74,15 +74,19 @@ def tinyMazeSearch(problem):
 
 visited = set()
 def dfsHelper(problem, state, parentState, actions):
-    if state not in visited:
-        visited.add(state)
+    if state[0] not in visited:
+        visited.add(state[0])
         actions.append(state[1])
         if problem.isGoalState(state[0]):
             return actions
         children = problem.getSuccessors(state[0])
         print(locals())
         for child in children:
-            dfsHelper(problem, child, state, actions)
+            ret = dfsHelper(problem, child, state, actions)
+            if ret != []:
+                return ret
+        return []
+    else:
         return []
 
 
@@ -108,7 +112,7 @@ def depthFirstSearch(problem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
 
     actions = dfsHelper(problem, (problem.getStartState(), None, None), None, [])
-    # actions.pop(0)
+    actions.pop(0)
     return actions
 
     # from game import Directions
