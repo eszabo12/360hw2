@@ -17,6 +17,8 @@ In search.py, you will implement generic search algorithms which are called by
 Pacman agents (in searchAgents.py).
 """
 
+from multiprocessing import parent_process
+from turtle import position
 import util
 
 class SearchProblem:
@@ -72,24 +74,13 @@ def tinyMazeSearch(problem):
     w = Directions.WEST
     return  [s, s, w, s, w, w, s, w]
 
-visited = set()
-def dfsHelper(problem, state, parentState, actions):
-    if state[0] not in visited:
-        visited.add(state[0])
-        actions.append(state[1])
-        if problem.isGoalState(state[0]):
-            return actions
-        children = problem.getSuccessors(state[0])
-        print(locals())
-        for child in children:
-            ret = dfsHelper(problem, child, state, actions)
-            if ret != []:
-                return ret
-        return []
-    else:
-        return []
 
-
+class Info:
+    def __init__(self, position, parent, direction):
+        self.position = position
+        self.parent = parent
+        self.direction = direction
+        
 def depthFirstSearch(problem):
     """
     Search the deepest nodes in the search tree first.
@@ -111,31 +102,30 @@ def depthFirstSearch(problem):
     print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
 
-    actions = dfsHelper(problem, (problem.getStartState(), None, None), None, [])
-    actions.pop(0)
-    return actions
 
-    # from game import Directions
-    # s = Directions.SOUTH
-    # w = Directions.WEST
-    # return  [s, s, w, s, w, w, s, w]
-    # returns a list of actions right?
-    fringe = util.Stack()
-    visited = util.Counter()
-    fringe.push(problem.getStartState())
-    # actions = []
-    actions = []
-    while not fringe.isEmpty():
-        state = fringe.pop()
-        if visited[state] != 0:
+    visited = set()
+    stack = []
+    stack.append((problem.getStartState(), None, None))
+    path = []
+    while stack:
+        state = stack.pop() #last element on stack
+        print(state[0])
+        if state[0] in visited:
             continue
-        # if problem.isGoalState(state):
-
-        visited[state] = 1 #make note that we visited it
-        children = state.getSuccessor(state)
+        visited.add(state[0])
+        path.append(state)
+        if problem.isGoalState(state[0]):
+            break
+        children = problem.getSuccessors(state[0])
         for child in children:
-            fringe.push(child[0])
-    
+            if child[0] not in visited:
+                stack.append(child)
+    actions = []
+    for item in path:
+        dir = item[1]
+        if dir != None:
+            actions.append(dir)
+    return actions
 
     print(type(problem))
     print("Start:", problem.getStartState())
