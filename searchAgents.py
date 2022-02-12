@@ -312,8 +312,8 @@ class CornersProblem(search.SearchProblem):
         "*** YOUR CODE HERE ***"
         x, y, visited = state
         position = (x, y)
-        if position in self.corners and position not in visited:
-            visited = visited + (position,)
+        # if position in self.corners and position not in visited:
+        #     visited = visited + (position,)
         return len(visited) == 4
 
     def getSuccessors(self, state):
@@ -338,6 +338,7 @@ class CornersProblem(search.SearchProblem):
             
             if not self.walls[nextx][nexty]:
                 nextState = (nextx, nexty, visited)
+                # cost = cornersHeuristic(nextState, self)
                 cost = 1
                 successors.append( ( nextState, action, cost) )
         self._expanded += 1 # DO NOT CHANGE
@@ -483,9 +484,9 @@ def elleMaze(point1, point2, gameState):
     assert not walls[x1][y1], 'point1 is a wall: ' + str(point1)
     assert not walls[x2][y2], 'point2 is a wall: ' + str(point2)
         # def __init__(self, gameState, costFn = lambda x: 1, goal=(1,1), start=None, warn=True, visualize=True):
-    costFn = lambda pos: euclidianDistance((1,1), pos)
+    # costFn = lambda pos: euclidianDistance(pos, point2)
 
-    prob = PositionSearchProblem(gameState, costFn=costFn, start=point1, goal=point2, warn=False, visualize=False)
+    prob = PositionSearchProblem(gameState, start=point1, goal=point2, warn=False, visualize=False)
     return len(search.bfs(prob))
 
 class AStarSuperFoodAgent(SearchAgent):
